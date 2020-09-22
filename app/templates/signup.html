@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Sign up</h1>
+
+    <p>
+        {{form.Username.label}} <br>
+        {{form.Username}}
+    </p>
+    <p>
+        {{form.Password.label}} <br>
+        {{form.Password}}
+    </p>
+    <p>
+        {{form.Submit()}}
+    </p>
+
+{% endblock %}
