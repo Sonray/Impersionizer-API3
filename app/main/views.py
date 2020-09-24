@@ -7,6 +7,7 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import InputRequired, Email, Length
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
@@ -22,12 +23,13 @@ def sign():
     form = SignUpForm()
 
     if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
         #return '<h1>' + form.username.data + form.email.data + form.password.data + '<h1>'
-        new_user = User(username = form.username.data, email = form.email.data, password = form.password.data)
+        new_user = User(username = form.username.data, email = form.email.data, password = hashed_password )
         db.session.add(new_user)
         db.session.commit()
 
-        return '<h1>Welcome </h1>'
+        return '<h1>Welcome'+  hashed_password +' </h1>'
 
     return render_template('signup.html', form=form)
 
@@ -42,7 +44,7 @@ def lod_in():
         user = User.query.filter_by(username = form.username.data).first()
 
         if user:
-            if user.password == form.password.data:
+            if  check_password_hash( user.password, form.password.data):
                 return '<h1> login success </h1>'
 
         return '<h1> inavalid username </h1>'
