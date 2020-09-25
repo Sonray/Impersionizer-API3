@@ -48,6 +48,8 @@ def login():
 
         if user:
             if  check_password_hash( user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+
                 return '<h1> login success </h1>'
 
         return '<h1> inavalid username </h1>'
@@ -69,3 +71,9 @@ def dashboard():
         return '<h1>Welcome </h1>'
 
     return render_template('dashboard.html', form=form)
+
+@main.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return 'logged out'
