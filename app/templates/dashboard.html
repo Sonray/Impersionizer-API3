@@ -1,5 +1,19 @@
 
 {% extends 'base.html'%}
-{% import 'macros.html' as macro%}
+{% import "bootstrap/wtf.html" as wtf %}
 
-{{hunt}}
+{% block content %}
+<div class="container">
+    <h1>Enter pitch</h1>
+
+    <form action="/login" method="POST" class="form-signin">
+        {{form.hidden_tag()}}
+        <p>
+            {{wtf.form_field(form.message)}}
+        </p>
+        <p>
+            {{form.submit()}}
+        </p>
+    </form>
+</div>  
+{% endblock %}

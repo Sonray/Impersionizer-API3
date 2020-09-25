@@ -1,16 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for
 from . import main
-from .. import db
-from .forms import SignUpForm, LoginForm
-from app.models import User
+from .. import db, login_manager
+from .forms import SignUpForm, LoginForm, PitchForm
+from app.models import User, Pitch
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import InputRequired, Email, Length
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_required, current_user, login_user, logout_user, current_user
 
-
-
+login_manager.login_view = 'main.login'
+@login_manager.user_loader
+def load_user(User_id):
+    return User.query.get(int(User_id))
 
 #views
 @main.route('/')
@@ -36,12 +38,12 @@ def sign():
 
 
 @main.route('/login', methods = ['POST', 'GET'])
-def lod_in():
+def login():
     
     form = LoginForm()
 
     if form.validate_on_submit():
-        #return '<h1>' + form.email.data + form.password.data + '<h1>'
+        
         user = User.query.filter_by(username = form.username.data).first()
 
         if user:
@@ -51,3 +53,19 @@ def lod_in():
         return '<h1> inavalid username </h1>'
 
     return render_template('login.html', form=form)
+
+@main.route('/dashboard', methods = ['POST', 'GET'])
+@login_required
+def dashboard():
+    
+    form = PitchForm()
+
+    if form.validate_on_submit():
+
+        new_pitch = Pitch(pitch = form.message.data)
+        db.session.add(new_pitch)
+        db.session.commit()
+
+        return '<h1>Welcome </h1>'
+
+    return render_template('dashboard.html', form=form)
