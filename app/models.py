@@ -19,6 +19,7 @@ class Pitch(UserMixin, db.Model):
     __tablename__ = 'Pitches'
     id = db.Column(db.Integer, primary_key=True)
     pitch = db.Column(db.String(255))
+    category = db.Column(db.String(255))
     User_id = db.Column(db.Integer, db.ForeignKey('user.id') )
 
     def __repr__(self):

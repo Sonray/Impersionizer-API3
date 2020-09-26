@@ -64,7 +64,7 @@ def dashboard():
 
     if form.validate_on_submit():
 
-        new_pitch = Pitch(pitch = form.message.data, User_id = current_user.id)
+        new_pitch = Pitch(pitch = form.message.data, category = form.category.data,User_id = current_user.id)
         db.session.add(new_pitch)
         db.session.commit()
 

@@ -13,6 +13,9 @@
             {{wtf.form_field(form.message)}}
         </p>
         <p>
+            {{wtf.form_field(form.category)}}
+        </p>
+        <p>
             {{form.submit()}}
         </p>
     </form>
@@ -20,4 +23,5 @@
 </div>  
 
 <li>{{macro.displaypitch(pitch)}}</li>
+
 {% endblock %}
