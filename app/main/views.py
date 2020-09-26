@@ -64,16 +64,24 @@ def dashboard():
 
     if form.validate_on_submit():
 
-        new_pitch = Pitch(pitch = form.message.data)
+        new_pitch = Pitch(pitch = form.message.data, User_id = current_user.id)
         db.session.add(new_pitch)
         db.session.commit()
 
         return '<h1>Welcome </h1>'
 
-    return render_template('dashboard.html', form=form)
+    
+    the_pitch = Pitch.query.all()
+
+    return render_template('dashboard.html', form=form, pitch=the_pitch)
 
 @main.route('/logout')
 @login_required
 def logout():
     logout_user()
     return 'logged out'
+
+@main.route('/dashboard')
+def pitch():
+    the_pitch = Pitch.query.all()
+    return render_template('dashboard.html', pitch=the_pitch)

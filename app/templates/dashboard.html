@@ -6,7 +6,7 @@
 <div class="container">
     <h1>Enter pitch</h1>
 
-    <form action="/login" method="POST" class="form-signin">
+    <form action="/dashboard" method="POST" class="form-signin">
         {{form.hidden_tag()}}
         <p>
             {{wtf.form_field(form.message)}}
@@ -15,5 +15,14 @@
             {{form.submit()}}
         </p>
     </form>
+
 </div>  
+
+<li>
+    {% for pitches in pitch %}
+        <li>
+            {{pitches.pitch}}
+        </li>
+    {% endfor %}
+</li>
 {% endblock %}
