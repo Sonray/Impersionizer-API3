@@ -1,6 +1,7 @@
 
 {% extends 'base.html'%}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import 'macros.html' as macro%}
 
 {% block content %}
 <div class="container">
@@ -18,11 +19,5 @@
 
 </div>  
 
-<li>
-    {% for pitches in pitch %}
-        <li>
-            {{pitches.pitch}}
-        </li>
-    {% endfor %}
-</li>
+<li>{{macro.displaypitch(pitch)}}</li>
 {% endblock %}

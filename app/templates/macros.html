@@ -1,0 +1,9 @@
+{% macro displaypitch(pitch) %}
+
+    {% for pitches in pitch %}  
+    <li>
+        {{pitches.pitch}}
+    </li>
+    {% endfor %}
+
+{% endmacro %}
