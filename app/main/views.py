@@ -93,11 +93,11 @@ def dashboard():
         db.session.commit()
 
         return '<h1>Welcome </h1>'
-
     
     the_pitch = Pitch.query.all()
+    user = User.query.filter_by(username= current_user.username)
 
-    return render_template('dashboard.html', form=form, pitch=the_pitch)
+    return render_template('dashboard.html', form=form, pitch=the_pitch, user=user )
 
 @main.route('/logout')
 @login_required

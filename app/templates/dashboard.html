@@ -5,6 +5,14 @@
 
 {% block content %}
 <div class="container">
+    <div class="col-sm-4">
+        <h1>user profile</h1>
+        {{macro.displayuser(user)}}
+        <h1>user like</h1>
+
+        <h1>user dislikes</h1>
+
+    </div>
     <h1>Enter pitch</h1>
 
     <form action="/dashboard" method="POST" class="form-signin">

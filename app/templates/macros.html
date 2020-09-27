@@ -17,3 +17,16 @@
     {% endfor %}
 
 {% endmacro %}
+
+{% macro displayuser(user) %}
+
+    {% for users in user %} 
+    
+    <li>
+        {{users.username}} <br>
+        {{users.email}}
+    </li>
+
+    {% endfor %}
+
+{% endmacro %}
