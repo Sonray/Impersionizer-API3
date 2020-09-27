@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from . import main
 from .. import db, login_manager
 from .forms import SignUpForm, LoginForm, PitchForm
-from app.models import User, Pitch
+from app.models import User, Pitch, Likes, Dislikes
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Length
@@ -55,6 +55,30 @@ def login():
         return '<h1> inavalid username </h1>'
 
     return render_template('login.html', form=form)
+
+
+
+@main.route('/like', methods = ['POST', 'GET'])
+@login_required
+def like():
+
+    if request.method == 'POST':
+        thepitch = request.form['pitch']
+        new_like = Likes(User_id =current_user.id , Pitch_id = thepitch )
+        db.session.add(new_like)
+        db.session.commit()
+
+
+@main.route('/dislike', methods = ['POST', 'GET'])
+@login_required
+def dislike():
+
+    if request.method == 'POST':
+        thepitch = request.form['pitchdis']
+        new_dislike = Dislikes(User_id =current_user.id , Pitch_id = thepitch )
+        db.session.add(new_dislike)
+        db.session.commit()
+
 
 @main.route('/dashboard', methods = ['POST', 'GET'])
 @login_required

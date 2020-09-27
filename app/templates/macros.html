@@ -3,8 +3,17 @@
     {% for pitches in pitch %}  
     <li>
         {{pitches.pitch}} <br>
-        {{pitches.category}}
+        {{pitches.category}} <br>
+        <form action="" method="POST" class="">
+            <li name = "pitch">{{pitches.id}}</li>
+            <button type="submit" class="btn btn-primary">like</button>
+        </form>
+        <form action="" method="POST" class="">
+            <li name = "pitchdis">{{pitches.id}}</li>
+            <button type="submit" class="btn btn-primary">dislike</button>
+        </form>
     </li>
+
     {% endfor %}
 
 {% endmacro %}
