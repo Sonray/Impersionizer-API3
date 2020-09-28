@@ -4,19 +4,12 @@
     <li>
         {{pitches.pitch}} <br>
         {{pitches.category}} <br>
-        <form action="" method="POST" class="">
-            <li name = "pitch">{{pitches.id}}</li>
-            <button type="submit" class="btn btn-primary">like</button>
-        </form>
-        <form action="" method="POST" class="">
-            <li name = "pitchdis">{{pitches.id}}</li>
-            <button type="submit" class="btn btn-primary">dislike</button>
-        </form>
     </li>
 
     {% endfor %}
 
 {% endmacro %}
+
 
 {% macro displayuser(user) %}
 
@@ -25,6 +18,20 @@
     <li>
         {{users.username}} <br>
         {{users.email}}
+    </li>
+
+    {% endfor %}
+
+{% endmacro %}
+
+
+{% macro displaylikes(like) %}
+
+    {% for likes in like %} 
+    
+    <li>
+        {{likes.username}} <br>
+        {{likes.email}}
     </li>
 
     {% endfor %}

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from . import main
 from .. import db, login_manager
 from .forms import SignUpForm, LoginForm, PitchForm
-from app.models import User, Pitch, Likes, Dislikes
+from app.models import User, Pitch, Like, Dislike
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Length
@@ -57,29 +57,6 @@ def login():
     return render_template('login.html', form=form)
 
 
-
-@main.route('/like', methods = ['POST', 'GET'])
-@login_required
-def like():
-
-    if request.method == 'POST':
-        thepitch = request.form['pitch']
-        new_like = Likes(User_id =current_user.id , Pitch_id = thepitch )
-        db.session.add(new_like)
-        db.session.commit()
-
-
-@main.route('/dislike', methods = ['POST', 'GET'])
-@login_required
-def dislike():
-
-    if request.method == 'POST':
-        thepitch = request.form['pitchdis']
-        new_dislike = Dislikes(User_id =current_user.id , Pitch_id = thepitch )
-        db.session.add(new_dislike)
-        db.session.commit()
-
-
 @main.route('/dashboard', methods = ['POST', 'GET'])
 @login_required
 def dashboard():
@@ -88,16 +65,46 @@ def dashboard():
 
     if form.validate_on_submit():
 
-        new_pitch = Pitch(pitch = form.message.data, category = form.category.data,User_id = current_user.id)
+        new_pitch = Pitch(pitch = form.message.data, category = form.category.data,the_User = current_user)
         db.session.add(new_pitch)
         db.session.commit()
 
         return '<h1>Welcome </h1>'
     
     the_pitch = Pitch.query.all()
-    user = User.query.filter_by(username= current_user.username)
+    user_username = current_user.username
+    user = User.query.filter_by(username = user_username).all()
+    liker = []
 
-    return render_template('dashboard.html', form=form, pitch=the_pitch, user=user )
+    return render_template('dashboard.html', form=form, pitch=the_pitch, user=user, likes = liker )
+
+
+
+
+
+@main.route('/dashboard', methods = ['POST', 'GET'])
+@login_required
+def like():
+
+    if request.method == 'POST':
+        thepitch = request.form['pitch']
+        new_like = Like(likes =current_user , liked = thepitch )
+        db.session.add(new_like)
+        db.session.commit()
+    
+
+
+@main.route('/dashboard', methods = ['POST', 'GET'])
+@login_required
+def dislike():
+
+    if request.method == 'POST':
+        thepitch = request.form['pitchdis']
+        new_dislike = Dislike(dislikes =current_user , disliked = thepitch )
+        db.session.add(new_dislike)
+        db.session.commit()
+    
+
 
 @main.route('/logout')
 @login_required
@@ -105,7 +112,4 @@ def logout():
     logout_user()
     return 'logged out'
 
-@main.route('/dashboard')
-def pitch():
-    the_pitch = Pitch.query.all()
-    return render_template('dashboard.html', pitch=the_pitch)
+

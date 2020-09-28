@@ -9,9 +9,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(55), unique = True)
     email = db.Column(db.String(100), unique = True)
     password = db.Column(db.String(90))
-    child = db.relationship('Pitch', backref= 'User' )
-    like = db.relationship('Likes', backref= 'likes' )
-    dislike = db.relationship('Dislikes', backref= 'dislikes' )
+    child = db.relationship('Pitch', backref= 'the_User' )
+    delike = db.relationship('Like', backref= 'likes' )
+    dislike = db.relationship('Dislike', backref= 'dislikes' )
 
     def __repr__(self):
         return f'User {self.username, self.email, self.password}'
@@ -23,13 +23,13 @@ class Pitch(UserMixin, db.Model):
     pitch = db.Column(db.String(255))
     category = db.Column(db.String(255))
     User_id = db.Column(db.Integer, db.ForeignKey('user.id') )
-    liked = db.relationship('Likes', backref='liked')
-    disliked = db.relationship('Dislikes', backref='disliked')
+    liked = db.relationship('Like', backref='liked')
+    disliked = db.relationship('Dislike', backref='disliked')
 
     def __repr__(self):
         return f'Pitch {self.pitch, self.category }'
 
-class Likes(UserMixin, db.Model):
+class Like(UserMixin, db.Model):
     __tablename__ = 'Likes'
     id = db.Column(db.Integer, primary_key=True)
     User_id = db.Column(db.Integer, db.ForeignKey('user.id') )
@@ -38,7 +38,7 @@ class Likes(UserMixin, db.Model):
     def __repr__(self):
         return f'Likes {self.User_id, self.Pitch_id }'
 
-class Dislikes(UserMixin, db.Model):
+class Dislike(UserMixin, db.Model):
     __tablename__ = 'Dislikes'
     id = db.Column(db.Integer, primary_key=True)
     User_id = db.Column(db.Integer, db.ForeignKey('user.id') )
