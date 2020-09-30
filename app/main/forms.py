@@ -1,28 +1,16 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, TextAreaField, BooleanField, SelectField
-from wtforms.validators import InputRequired, Email, Length
+from wtforms import StringField, TextAreaField, SubmitField, SelectField
+from wtforms.validators import Required, Email, Length
 
-
-class SignUpForm(FlaskForm):
-    username = StringField('Enter User-Name', validators=[InputRequired(), Length(max=20)])
-    email = StringField('Enter Your Email',  validators=[InputRequired(), Email(message='Invalid Email')])
-    password = PasswordField('Enter password', validators=[InputRequired(), Length(min=8, max=50)])
-    submit = SubmitField('Sign Up')
-
-class LoginForm(FlaskForm):
-    username = StringField('Enter User-Name', validators=[InputRequired(), Length(max=20)])
-    password = PasswordField('Enter password', validators=[InputRequired(), Length(min=8, max=50)])
-    remember = BooleanField()
-    submit = SubmitField('Sign Up')
 
 class PitchForm(FlaskForm):
-    message = TextAreaField('Enter your pitch', validators=[InputRequired(), Length(max=255)])
-    category = SelectField('Select pitch category', choices=[('technology', 'technology'), ('business', 'business'), ('politics', 'politics'), 
-    ('art', 'art'), ('sports', 'sports'), ('music', 'music'), ('travel', 'travel')], validators=[InputRequired()] )
+    title = StringField('Title', validators=[Required()])
+    description = TextAreaField('Description', validators=[Required()])
+    owners = TextAreaField('Owners/Members', validators=[Required()])
+    technologies = TextAreaField('Technologies used', validators=[Required()])
+    cohort = SelectField('Select cohort', choices=[('mc1', 'MC1'),('mc2', 'MC2'),('mc3', 'MC3'),('mc4', 'MC4'),('mc5', 'MC5'),('mc6', 'MC6'),('mc7', 'MC7'),('mc8', 'MC8'),('mc9', 'MC9'),('mc10', 'MC10'),('mc11', 'MC11'),('mc12', 'MC12'),('mc13', 'MC13'),('mc14', 'MC14'),('mc15', 'MC15')])
     submit = SubmitField('Post')
 
-
-class PitchCategoryForm(FlaskForm):
-    category = SelectField('Select pitch category', choices=[('technology', 'technology'), ('business', 'business'), ('politics', 'politics'), 
-    ('art', 'art'), ('sports', 'sports'), ('music', 'music'), ('travel', 'travel')], validators=[InputRequired()] )
-    submit = SubmitField('Get')
+class CommentForm(FlaskForm):
+    comment = TextAreaField('Post Comment', validators=[Required()])
+    submit = SubmitField('Submit')

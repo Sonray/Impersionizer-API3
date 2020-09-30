@@ -1,129 +1,101 @@
-from flask import Flask, render_template, request, redirect, url_for
+
+from flask import render_template, request, redirect, url_for, abort
+from flask_login import login_required, current_user
 from . import main
-from .. import db, login_manager
-from .forms import SignUpForm, LoginForm, PitchForm, PitchCategoryForm
-from app.models import User, Pitch, Like, Dislike
-from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
-from wtforms.validators import InputRequired, Email, Length
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_required, current_user, login_user, logout_user, current_user
+from .forms import PitchForm, CommentForm
+from ..models import Pitch, Comment, Star
+from .. import db
+import markdown2
 
-login_manager.login_view = 'main.login'
-@login_manager.user_loader
-def load_user(User_id):
-    return User.query.get(int(User_id))
 
-#views
 @main.route('/')
 def index():
-    hunt = 'hello world'
-    return render_template('index.html', hunt=hunt)
+    '''
+    View root page function that returns the index page and its data
+    '''
+    title = 'Home - Welcome to Moringa Pitch'
+    pitches = Pitch.query.order_by(Pitch.pitched_p.desc()).all()
+    return render_template('index.html', title = title, pitches = pitches)
 
+@main.route('/about')
+def about():
+    '''
+    View root page function that returns the index page and its data
+    '''
+    title = 'About - Welcome to Moringa Pitch'
+    return render_template('about.html', title = title)
 
-@main.route('/sign', methods = ['POST', 'GET'])
-def sign():
-    form = SignUpForm()
+@main.route('/pitches/<cohort>')
+def pitches(cohort):
+    '''
+    View root page function that returns the index page and its data
+    '''
+    pitches = Pitch.query.filter_by(cohort=cohort).order_by(Pitch.pitched_p.desc()).all()
+    return render_template('pitches.html', pitches=pitches,cohort=cohort)
 
-    if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username = form.username.data, email = form.email.data, password = hashed_password )
-        db.session.add(new_user)
-        db.session.commit()
+@main.route('/pitch/<int:id>')
+def pitch(id):
 
-        return '<h1>Welcome'+  hashed_password +' </h1>'
+    '''
+    View movie page function that returns the pitch details page and its data
+    '''
+    pitches = Pitch.query.filter_by(id=id)
+    comments = Comment.query.filter_by(pitch_id=id).all()
 
-    return render_template('signup.html', form=form)
+    return render_template('pitch.html',pitches = pitches,comments = comments)
 
-
-@main.route('/login', methods = ['POST', 'GET'])
-def login():
-    
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        
-        user = User.query.filter_by(username = form.username.data).first()
-
-        if user:
-            if  check_password_hash( user.password, form.password.data):
-                login_user(user, remember=form.remember.data)
-
-                return '<h1> login success </h1>'
-
-        return '<h1> inavalid username </h1>'
-
-    return render_template('login.html', form=form)
-
-
-@main.route('/dashboard', methods = ['POST', 'GET'])
+@main.route('/pitch/new', methods=['GET', 'POST'])
 @login_required
-def dashboard():
-    
+def new_pitches():
     form = PitchForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        description = form.description.data
+        owners = form.owners.data
+        cohort = form.cohort.data
+        technologies = form.technologies.data
+
+        new_pitch = Pitch(title=title, description=description, owners=owners,technologies=technologies, cohort=cohort, user_p=current_user._get_current_object().id)
+        new_pitch.save_pitch()
+        
+        pitches = Pitch.query.order_by(Pitch.pitched_p.desc()).all()
+        return render_template('pitches.html', pitches=pitches)
+
+    title = 'New Pitch'
+    return render_template('new_pitch.html', title=title, pitch_form=form)
+
+@main.route('/comment/new/<int:pitch_id>', methods = ['GET','POST'])
+@login_required
+def new_comment(pitch_id):
+    form = CommentForm()
+    pitch = Pitch.query.get(pitch_id)
 
     if form.validate_on_submit():
+        comment = form.comment.data
+         
+        # Updated comment instance
+        new_comment = Comment(comment=comment,user_c=current_user._get_current_object().id, pitch_id=pitch_id)
 
-        new_pitch = Pitch(pitch = form.message.data, category = form.category.data,the_User = current_user)
-        db.session.add(new_pitch)
-        db.session.commit()
+        # save comment method
+        new_comment.save_comment()
+        return redirect(url_for('.new_comment',pitch_id = pitch_id ))
 
-        return '<h1>Welcome </h1>'
+    all_comments = Comment.query.filter_by(pitch_id=pitch_id).all()
+    return render_template('comment.html', form=form, comments=all_comments, pitch=pitch)
+
+@main.route('/pitch/star/<int:pitch_id>/star', methods=['GET', 'POST'])
+@login_required
+def star(pitch_id):
+    pitch = Pitch.query.get(pitch_id)
+    user = current_user
+    pitch_stars = Star.query.filter_by(pitch_id=pitch_id)
+    pitches = Pitch.query.order_by(Pitch.pitched_p.desc()).all()
+
+    if Star.query.filter(Star.user_id == user.id, Star.pitch_id == pitch_id).first():
+        return render_template('pitches.html', pitches=pitches)
+
+    new_star = Star(pitch_id=pitch_id, user=current_user)
+    new_star.save_stars()
     
-    the_pitch = Pitch.query.all()
-    user_username = current_user.username
-    user = User.query.filter_by(username = user_username).all()
-    liker = []
-
-    return render_template('dashboard.html', form=form, pitch=the_pitch, user=user, likes = liker )
-
-@main.route('/category', methods = ['POST', 'GET'])
-@login_required
-def pitch_by_category():
-
-    '''
-    View root page function that returns pitch category page with pitches from category selected
-    '''
-    formy = PitchCategoryForm()
-
-    if formy.validate_on_submit():
-        category_name = formy.category.data
-        pitches=Pitch.query.filter_by(category=category_name).order_by(Pitch.id.desc()).all()
-        
-        return render_template('categories.html',pitches=pitches,category=category_name, formy=formy)
-        
-
-    return render_template('categories.html', formy=formy, category=category)
-        
-
-@main.route('/dashboard', methods = ['POST', 'GET'])
-@login_required
-def like():
-
-    if request.method == 'POST':
-        thepitch = request.form['pitch']
-        new_like = Like(likes =current_user , liked = thepitch )
-        db.session.add(new_like)
-        db.session.commit()
-    
-
-
-@main.route('/dashboard', methods = ['POST', 'GET'])
-@login_required
-def dislike():
-
-    if request.method == 'POST':
-        thepitch = request.form['pitchdis']
-        new_dislike = Dislike(dislikes =current_user , disliked = thepitch )
-        db.session.add(new_dislike)
-        db.session.commit()
-    
-
-
-@main.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return 'logged out'
-
-
+    return render_template('pitches.html', pitches=pitches)
+    return render_template('index.html', title=title)
