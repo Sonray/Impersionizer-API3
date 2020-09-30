@@ -20,3 +20,9 @@ class PitchForm(FlaskForm):
     category = SelectField('Select pitch category', choices=[('technology', 'technology'), ('business', 'business'), ('politics', 'politics'), 
     ('art', 'art'), ('sports', 'sports'), ('music', 'music'), ('travel', 'travel')], validators=[InputRequired()] )
     submit = SubmitField('Post')
+
+
+class PitchCategoryForm(FlaskForm):
+    category = SelectField('Select pitch category', choices=[('technology', 'technology'), ('business', 'business'), ('politics', 'politics'), 
+    ('art', 'art'), ('sports', 'sports'), ('music', 'music'), ('travel', 'travel')], validators=[InputRequired()] )
+    submit = SubmitField('Get')

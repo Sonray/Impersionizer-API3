@@ -1,0 +1,27 @@
+
+{% extends 'base.html'%}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import 'macros.html' as macro%}
+
+
+<div class="container">
+    <h1>Display category</h1>
+
+    <form action="/category" method="POST" class="form-signin">
+        {{formy.hidden_tag()}}
+        <p>
+            {{wtf.formy_field(formy.category)}}
+        </p>
+        <p>
+            {{formy.submit()}}
+        </p>
+    </form>
+</div>
+
+<div class="container">
+
+    {{category}}
+
+    {{macro.displaycategory(category_result)}}
+
+</div>

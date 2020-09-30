@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from . import main
 from .. import db, login_manager
-from .forms import SignUpForm, LoginForm, PitchForm
+from .forms import SignUpForm, LoginForm, PitchForm, PitchCategoryForm
 from app.models import User, Pitch, Like, Dislike
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -27,7 +27,6 @@ def sign():
 
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        #return '<h1>' + form.username.data + form.email.data + form.password.data + '<h1>'
         new_user = User(username = form.username.data, email = form.email.data, password = hashed_password )
         db.session.add(new_user)
         db.session.commit()
@@ -78,9 +77,24 @@ def dashboard():
 
     return render_template('dashboard.html', form=form, pitch=the_pitch, user=user, likes = liker )
 
+@main.route('/category', methods = ['POST', 'GET'])
+@login_required
+def pitch_by_category():
 
+    '''
+    View root page function that returns pitch category page with pitches from category selected
+    '''
+    formy = PitchCategoryForm()
 
+    if formy.validate_on_submit():
+        category_name = formy.category.data
+        pitches=Pitch.query.filter_by(category=category_name).order_by(Pitch.id.desc()).all()
+        
+        return render_template('categories.html',pitches=pitches,category=category_name, formy=formy)
+        
 
+    return render_template('categories.html', formy=formy, category=category)
+        
 
 @main.route('/dashboard', methods = ['POST', 'GET'])
 @login_required
