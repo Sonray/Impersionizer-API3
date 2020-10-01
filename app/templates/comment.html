@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="container">
+		
+		  <br>
+		  <img src="https://pngimage.net/wp-content/uploads/2018/05/decorative-horizontal-line-png-3.png" height="100%"
+		  	width="100%">
+		  <br>
+
+		  <div class="row">
+		  	<div class="col-md-3" style="align-content:right"><img
+		  			src="https://course_report_production.s3.amazonaws.com/rich/rich_files/rich_files/566/s200/10710615-512708608864666-6379526937469666187-n.png"
+		  			height="160px" width="200px">
+		  	</div>
+		  	<div class="col-md-7">
+		  		{{wtf.quick_form(form)}}
+		  	</div>
+		  	<div class="col-md-2"></div>
+
+		  </div>
+		  <br>
+		  <hr>
+
+		<div>
+			<h3>Comments for {{pitch.title}}</h3>
+		</div>
+	{% if comments %}
+	<div class="row text-center">
+			{% for comment in comments %}
+				<div class="col-md-4">
+<!-- Card -->
+<div class="card card-image" style="background-image: url();">
+
+  <!-- Content -->
+  <div class="text-white text-center d-flex align-items-center rgba-black-strong py-5 px-4">
+    <div>
+      <p class="card-title pt-2">{{ comment.comment}}</p>
+				<h5 class="light-green-text">~ {{comment.user.username}}</h5>
+    </div>
+  </div>
+
+</div>
+		<hr>
+					</div>
+			{% endfor %}
+		</div>
+			{% else %}
+
+			<h3>No comments</h3>
+			{%endif%}
+</div>
+
+<!-- Footer -->
+<footer class="page-footer font-small light-green darken-2">
+
+	<!-- Copyright -->
+	<div class="footer-copyright text-center py-3">© 2020 Copyright:
+		<a href="https://mdbootstrap.com/education/bootstrap/"> Impersoniser-Pitch</a>
+	</div>
+	<!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+{% endblock %}

@@ -1,20 +1,58 @@
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"> Watchlist </a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/sign">Sign up</a></li>
-                <li><a href="/login">login</a></li>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-dark  light-green darken-2 ">
 
-    </div>
-</div>
+    <a class="navbar-brand" href="/">
+      <img src="{{url_for('static', filename='nav.png' )}}" height="55" alt="mdb logo">
+    </a>
+  
+  
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+      aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="basicExampleNav">
+  
+      <ul class="navbar-nav mr-auto">
+        
+          <li class="nav-item">
+              <a class="nav-link" href="/">Home
+              </a>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Pitches</a>
+              <div class="dropdown-menu dropdown-primary " aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item"  href="/pitches/mc1">COHORT-1</a>
+                <a class="dropdown-item"  href="/pitches/mc2">COHORT-2</a>
+                <a class="dropdown-item"  href="/pitches/mc3">COHORT-3</a>
+                <a class="dropdown-item"  href="/pitches/mc4">COHORT-4</a>
+                <a class="dropdown-item"  href="/pitches/mc5">COHORT-5</a>
+                <a class="dropdown-item"  href="/pitches/mc6">COHORT-6</a>
+                <a class="dropdown-item"  href="/pitches/mc7">COHORT-7</a>
+                <a class="dropdown-item"  href="/pitches/mc8">COHORT-8</a>
+                <a class="dropdown-item"  href="/pitches/mc9">COHORT-9</a>
+                <a class="dropdown-item"  href="/pitches/mc10">COHORT-10</a>
+                <a class="dropdown-item"  href="/pitches/mc11">COHORT-11</a>
+                <a class="dropdown-item"  href="/pitches/mc12">COHORT-12</a>
+                <a class="dropdown-item"  href="/pitches/mc13">COHORT-13</a>
+              </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About
+                </a>
+            </li>
+        </ul>
+      
+  
+      <div class="nav navbar-nav navbar-right">
+        {% if current_user.is_authenticated %}
+        <a class="nav-item nav-link" href="{{url_for('auth.account')}}">Account</a>
+        <a class="nav-item nav-link" href="{{url_for('auth.logout')}}">Log out</a>
+       {% else %}
+        <a class="nav-item nav-link" href="{{url_for('auth.login')}}">Login</a>
+        <a class="nav-item nav-link" href="{{url_for('auth.register')}}">Register</a>
+        {% endif %}
+      </div>
+  
+  
+  </nav>
