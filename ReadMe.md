@@ -9,7 +9,7 @@ News app allows people to sign up and post their pitches and give upvotes and do
 https://github.com/Sonray/Impersionizer-API3.git
 
 #### live link
-https://floating-harbor-31952.herokuapp.com/
+https://afternoon-mountain-70103.herokuapp.com/ 
 
 ## About Author
 Author's name is David Okwacha
