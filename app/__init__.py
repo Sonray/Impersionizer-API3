@@ -43,6 +43,7 @@ def create_app(config_name):
      mail.init_app(app)
      simple.init_app(app)
      admin.init_app(app)
+     
 
      from app.auth.views import auth
      app.register_blueprint(auth)

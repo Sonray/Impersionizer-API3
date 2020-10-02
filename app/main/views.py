@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, abort
 from flask_login import login_required, current_user
 from . import main
 from .forms import PitchForm, CommentForm
-from ..models import Pitch, Comment, Star
+from ..models import Pitch, Comment, Star, User
 from .. import db
 import markdown2
 

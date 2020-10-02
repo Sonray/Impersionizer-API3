@@ -1,12 +1,12 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 from app import db, bcrypt
-from app.models import User
+from app.models import User, Pitch
 from app.auth.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                                    RequestResetForm, ResetPasswordForm)
 from app.auth.utils import save_picture, send_reset_email
+from . import auth
 
-auth = Blueprint('auth', __name__)
 
 @auth.route("/register", methods=['GET', 'POST'])
 def register():
@@ -68,8 +68,8 @@ def account():
 def user_posts(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.filter_by(author=user)\
-        .order_by(Post.date_posted.desc())\
+    posts = Pitch.query.filter_by(author=user)\
+        .order_by(Pitch.date_posted.desc())\
         .paginate(page=page, per_page=5)
     return render_template('user_posts.html', posts = posts, user = user)
 

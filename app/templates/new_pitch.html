@@ -12,11 +12,13 @@
 
   <div class="row">
     <div class="col-md-3" style="align-content:right"><img
-        src="https://course_report_production.s3.amazonaws.com/rich/rich_files/rich_files/566/s200/10710615-512708608864666-6379526937469666187-n.png"
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.Q1IlihfHrY8vqPNysHBouwHaD3%26pid%3DApi&f=1"
         height="160px" width="200px">
     </div>
     <div class="col-md-7">
-      {{ wtf.quick_form(pitch_form) }}
+      <form action="/pitch/new" method="post">
+        {{ wtf.quick_form(pitch_form) }}
+      </form>
     </div>
     <div class="col-md-2"></div>
    

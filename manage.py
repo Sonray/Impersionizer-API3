@@ -2,10 +2,9 @@ from app import create_app, db, admin
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 from flask_admin.contrib.sqla import ModelView
-from app.models import User,Comment, Pitch
+from app.models import User,Comment, Pitch, Star
 
 app = create_app('development')
-app = create_app('production')
 manager = Manager(app)
 manager.add_command('server',Server)
 
@@ -15,6 +14,7 @@ manager.add_command('db',MigrateCommand)
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Pitch, db.session))
 admin.add_view(ModelView(Comment, db.session))
+admin.add_view(ModelView(Star, db.session))
 @manager.command
 def test():
     """Run the unit tests."""
